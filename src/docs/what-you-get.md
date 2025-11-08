@@ -41,3 +41,35 @@ typeof Example; // Error
 ```
 
 - Type `never` không gán được bất kỳ giá trị nào.
+- Dấu `?` nằm sau property nghĩa là optional (Không bắt buộc: có cũng được, không có cũng được).
+- Union Type |
+<!-- Hoặc type này hoặc type kia -->
+```typescript
+// Ví dụ:
+string | number;
+// Có thể sử dụng alias để có thể tái sử dụng lại type string | number;
+type NewNumber = string | number;
+```
+
+- Intersection Type &
+<!-- Và cái này và cái kia (bắt buộc phải có cả 2) -->
+```typescript
+{
+    name: string
+} & {
+    address: string
+}
+```
+Tuy nhiên không thể nào kết hợp nhiều type khác nhau lại. Ví dụ như kết hợp number và string
+Một biến không thể nào vừa là số vừa là chuỗi được, giả dụ như:
+```typescript
+score: number & string
+// Không hợp lệ
+```
+<!-- Lúc này sẽ báo lỗi ngay lập tức. Vì như lúc bạn đầu tôi đã đề cập thì một biến không thể nào nhận đồng thời 2 giá trị vừa là số vừa là chuỗi được
+nên việc khai báo score: number & string là không hợp lên và sẽ gây ra lỗi hiển thị ngay sau khi compile xong code (Không cần build) -->
+
+- {} là 1 type đặc biệt trong Typescript, nó có tất cả các giá trị ngoại trừ `null` và `undefined`.
+- Khi làm việc với Object thì nên khai báo các properties cũng như các type của từng property hoặc dùng `Record<string, any>`
+
+<!-- Mục đích: Kết hợp nhiều kiểu dữ liệu khác nhau => tạo ra Type mới đa dạng hơn -->
