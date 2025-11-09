@@ -49,6 +49,7 @@ typeof Example; // Error
 string | number;
 // Có thể sử dụng alias để có thể tái sử dụng lại type string | number;
 type NewNumber = string | number;
+(string | number)[];
 ```
 
 - Intersection Type &
@@ -71,5 +72,81 @@ nên việc khai báo score: number & string là không hợp lên và sẽ gây
 
 - {} là 1 type đặc biệt trong Typescript, nó có tất cả các giá trị ngoại trừ `null` và `undefined`.
 - Khi làm việc với Object thì nên khai báo các properties cũng như các type của từng property hoặc dùng `Record<string, any>`
+
+- Sử dụng `typeof` vào biến để kiểm tra type của một biến nào đó
+- Để khai báo type trong typescript thì chúng ta sử dụng từ khoá là:
+`interface` và `type`
+- Tên Type thì viết theo PascalCase nghĩa là tất cả các chữ cái đầu tiên của từng từ đều in hoa
+
+```typescript
+type SOmethingElse = {
+    x: number;
+};
+
+interface SomethingElse {
+    x: number;
+}
+```
+
+- Khi chúng ta sử dụng dấu : để khai báo type thì cái type nó sẽ mạnh hơn cái value. (Type beast Value)
+
+- `as const` sẽ biến giá trị thành readonly, tức là chỉ đọc chứ không thể thêm, xoá, cập nhật
+```typescript
+const scores1 = [1, 2, 3, 4, 5] as const; // Cú pháp ngắn gọn hơn
+const scores2: readonly [1, 2, 3, 4, 5] = [1, 2, 3, 4, 5]; // cú pháp hơi dài
+scores1.push(6);
+scores2.push(6);
+// Error:
+// Property 'push' does not exist on type 'readonly [1, 2, 3, 4, 5]'.
+```
+
+- `as Type` nghĩa là chúng ta đang nói dối Typescript rằng, mày tin tao đi, tao biết nó là Type gì mà nên sẽ không báo lỗi nữa.
+- Có thể mở rộng Type ra hơn nhưng cũng có thể dễ gây ra lỗi hơn
+```typescript
+ // as Type
+  type User = {
+    id: number;
+    name: {
+      firstName: string;
+      lastName: string;
+    };
+  };
+
+  const newUser = {} as User;
+  // . property của User không hề báo lỗi
+  //   const property = newUser?.name?.firstName;
+```
+
+- `satisfies` thì cái Value sẽ đánh bại cái Type (Value beast Type)
+- Khi sử dụng `satisfies` thì giúp code chúng ta rõ ràng hơn, nhưng nó sẽ cố định Type luôn.
+```typescript
+// satisfies - Typescript 4.9
+  const routes2 = {
+    "/": "homepage",
+    "/about": "About page",
+    "/dashboard": "Dashboard page",
+  } satisfies Record<string, any>;
+  // Tường minh hơn, tự động intellisen, suggest các key của các properties trong object routes2
+  // Tự động báo lỗi nếu key không tồn tại trong object
+  console.log(routes2["evondev"]);
+
+```
+ts-node -esm type-assertions.ts
+
+- Tuples type là mảng được xác định trước độ dài và type cho từng index cụ thể.
+- Không sử dụng được `as const` cho Tuples.
+- Để Tuples chỉ đọc thì thêm từ khoá `readonly` ở phía trước.
+
+```typescript
+const information: readonly [
+    count: number,
+    username: string,
+    isAdmin: boolean
+  ] = [100, "nam", true];
+  
+  // Lúc này mảng sẽ không giống ban đầu đã khai báo
+  //   information.push(100); Error cause readonly
+  // => Lúc này cần sử dụng từ khoá readonly (Không sử dụng được as const)
+```
 
 <!-- Mục đích: Kết hợp nhiều kiểu dữ liệu khác nhau => tạo ra Type mới đa dạng hơn -->

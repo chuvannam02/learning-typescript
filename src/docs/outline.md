@@ -22,3 +22,34 @@ https://www.facebook.com/reel/589945063955734
 - Object
 
 # Middle Types
+- Union
+- Intersection
+- Type Guard: typeof, in, instanceof
+- Type Assertions: as Type, as const, satifies
+- satifies
+- Enum
+- Tuples
+- Function
+
+# Utility
+- Record
+- Partial
+- Omit
+- Readonly
+- Pick
+- Exclude<UnionType, ExcludedMembers>
+- Extract<Type, Union>
+
+# Conditional Type
+
+# Mapped Type
+
+# Index Type
+
+# Generic
+
+# Function Overload
+
+# Classes
+
+# React
