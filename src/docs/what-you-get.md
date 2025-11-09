@@ -40,6 +40,35 @@ typeof 10; // number
 typeof Example; // Error
 ```
 
+- Từ khoá `keyof` chỉ được sử dụng cho Type lấy ra danh sách key của các properties trong object
+- Nếu muốn sử dụng cho biến thì biến đó phải có từ khoá `typeof` ở phía trước. Ví dụ như sau:
+```Typescript
+const complexObj = {
+  javascript: {
+    label: "Javascript",
+  },
+  typescript: {
+    label: "Typescript",
+  },
+  reactjs: {
+    label: "Reactjs",
+  },
+} as const;
+
+// 👉 Giải thích:
+
+// as const giúp TypeScript co cụm giá trị về literal type, thay vì "string".
+
+// typeof complexObj lấy kiểu của object.
+
+// keyof lấy ra tất cả key của kiểu đó ⇒ "javascript" | "typescript" | "reactjs".
+
+// Hoặc viết đầy đủ hơn là 
+type ComplexObj = typeof complexObj;
+type ComplexObjKeys = keyof ComplexObj;
+
+```
+
 - Type `never` không gán được bất kỳ giá trị nào.
 - Dấu `?` nằm sau property nghĩa là optional (Không bắt buộc: có cũng được, không có cũng được).
 - Union Type |
