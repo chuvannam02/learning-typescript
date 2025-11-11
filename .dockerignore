@@ -1,0 +1,8 @@
+/node_modules
+/.idea
+/.gitignore
+README.md
+eslint.config.js
+Dockerfile
+/dist
+.editorconfig
