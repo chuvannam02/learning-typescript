@@ -18,24 +18,76 @@ Omit<{ a: 1; b: 2; c: 3 }, "a" | "b">
 ```
 
 - Extract<Type, Union>: Constructs a type by extracting from Type all union members that are assignable to Union.
+- Tạo ra một kiểu mới bằng cách trích xuất (extract) từ Type các phần tử trong union mà có thể gán được (assignable) cho Union.
 ```Typescript
+// ⚙️ Cách hoạt động:
+Giả
+sử
+có
+type: type Extract<T, U> = T extends U ? T : never;
+// Với mỗi phần tử trong union T, TypeScript sẽ kiểm tra xem nó có thể gán cho U không.
+// Nếu có thể, nó giữ lại phần tử đó.
+// Nếu không thể, nó loại bỏ (never).
+// → Kết quả là một union mới chỉ gồm những phần tử phù hợp.
 type T0 = Extract<"a" | "b" | "c", "a" | "f">;
-     
+
 type T0 = "a"
 type T1 = Extract<string | number | (() => void), Function>;
-     
+
 type T1 = () => void
- 
+
 type Shape =
-  | { kind: "circle"; radius: number }
-  | { kind: "square"; x: number }
-  | { kind: "triangle"; x: number; y: number };
- 
+    | { kind: "circle"; radius: number }
+    | { kind: "square"; x: number }
+    | { kind: "triangle"; x: number; y: number };
+
 type T2 = Extract<Shape, { kind: "circle" }>
-     
+
 type T2 = {
     kind: "circle";
     radius: number;
+}
+
+// ✅ Ví dụ thực tế
+type ApiResponse =
+    | { status: "success"; data: string }
+    | { status: "error"; message: string };
+
+type SuccessResponse = Extract<ApiResponse, { status: "success" }>;
+// -> { status: "success"; data: string }
+
+type ErrorResponse = Extract<ApiResponse, { status: "error" }>;
+// -> { status: "error"; message: string }
+type SuccessResponse = Extract<ApiResponse, { status: "success" }>;
+type ErrorResponse = Extract<ApiResponse, { status: "error" }>;
+
+function handleResponse(res: ApiResponse) {
+    if (res.status === "success") {
+        const data: SuccessResponse = res; // ✅ type-safe
+        console.log("Data:", data.data);
+    } else if (res.status === "error") {
+        const error: ErrorResponse = res; // ✅ type-safe
+        console.error("Error:", error.message);
+    }
+}
+
+// 🔧 3. Ví dụ trong Redux-style Actions
+// Giả sử bạn có type union cho toàn bộ action:
+type Action =
+    | { type: "ADD_TODO"; payload: string }
+    | { type: "REMOVE_TODO"; id: number }
+    | { type: "CLEAR_ALL" };
+
+// Bạn muốn viết reducer chỉ xử lý "ADD_TODO" action.
+
+type AddTodoAction = Extract<Action, { type: "ADD_TODO" }>;
+
+function reducer(state: string[], action: Action): string[] {
+    if (action.type === "ADD_TODO") {
+        const addAction: AddTodoAction = action;
+        return [...state, addAction.payload];
+    }
+    return state;
 }
 ```
 
