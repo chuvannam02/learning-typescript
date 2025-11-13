@@ -9,6 +9,7 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    environment: DOCKERHUB_USERNAME   # 👈 chỉ định environment
 
     steps:
       - name: Checkout repository
@@ -20,8 +21,8 @@ jobs:
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ vars.DOCKERHUB_USERNAME }}     # 👈 lấy từ environment variables
+          password: ${{ secrets.DOCKERHUB_TOKEN }}     # 👈 lấy từ environment secrets
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v6
@@ -30,8 +31,8 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ${{ secrets.DOCKERHUB_USERNAME }}/learning-typescript:latest
-            ${{ secrets.DOCKERHUB_USERNAME }}/learning-typescript:${{ github.run_number }}
+            ${{ vars.DOCKERHUB_USERNAME }}/learning-typescript:latest
+            ${{ vars.DOCKERHUB_USERNAME }}/learning-typescript:${{ github.run_number }}
 
       - name: Logout from Docker Hub
         run: docker logout
