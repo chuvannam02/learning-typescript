@@ -40,7 +40,6 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: |
-            ${{ vars.DOCKERHUB_USERNAME }}/learning-typescript:latest
             ${{ vars.DOCKERHUB_USERNAME }}/learning-typescript:${{ env.TAG }}
 
       - name: 🧹 Logout from Docker Hub
