@@ -53,6 +53,10 @@ jobs:
           push: true
           tags: |
             ${{ vars.DOCKERHUB_USERNAME }}/learning-typescript:${{ env.TAG }}
+            
+          # Bật cache
+          cache-from: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/learning-typescript:cache
+          cache-to: type=registry,ref=${{ vars.DOCKERHUB_USERNAME }}/learning-typescript:cache,mode=max
 
       - name: 🧹 Logout from Docker Hub
         if: always()
