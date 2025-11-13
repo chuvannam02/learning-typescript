@@ -39,9 +39,9 @@ jobs:
       - name: 🕒 Generate timestamp tag
         id: time
         run: |
-          TAG=$(date +'%d-%m-%Y_%H-%M-%S')
+          TAG=$(TZ="Asia/Bangkok" date +'%d-%m-%Y_%H-%M-%S')
           echo "TAG=$TAG" >> $GITHUB_ENV
-          echo "🕓 Generated tag: $TAG"
+          echo "🕓 Generated tag (UTC+7): $TAG"
 
       - name: 🏗️ Build and push Docker image
         id: build
