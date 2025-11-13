@@ -9,22 +9,31 @@ on:
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
-    environment: DOCKERHUB_USERNAME   # 👈 chỉ định environment
+    environment: DOCKERHUB_USERNAME
 
     steps:
-      - name: Checkout repository
+      - name: 🧾 Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Docker Buildx
+      - name: 🧰 Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Login to Docker Hub
+      - name: 🔑 Login to Docker Hub
         uses: docker/login-action@v3
         with:
-          username: ${{ vars.DOCKERHUB_USERNAME }}     # 👈 lấy từ environment variables
-          password: ${{ secrets.DOCKERHUB_TOKEN }}     # 👈 lấy từ environment secrets
+          username: ${{ vars.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push Docker image
+      - name: 🕒 Generate timestamp tag
+        id: time
+        run: |
+          TAG=$(date +'%d-%m-%Y_%H-%M-%S')
+          echo "TAG=$TAG" >> $GITHUB_ENV
+          echo "🕓 Generated tag: $TAG"
+
+      - name: 🏗️ Build and push Docker image
+        id: build
+        continue-on-error: true   # Cho phép tiếp tục để ta log lỗi thủ công
         uses: docker/build-push-action@v6
         with:
           context: .
@@ -32,7 +41,27 @@ jobs:
           push: true
           tags: |
             ${{ vars.DOCKERHUB_USERNAME }}/learning-typescript:latest
-            ${{ vars.DOCKERHUB_USERNAME }}/learning-typescript:${{ github.run_number }}
+            ${{ vars.DOCKERHUB_USERNAME }}/learning-typescript:${{ env.TAG }}
 
-      - name: Logout from Docker Hub
+      - name: 🧹 Logout from Docker Hub
+        if: always()
         run: docker logout
+
+      - name: ✅ Log success
+        if: steps.build.outcome == 'success'
+        run: |
+          echo ""
+          echo "✅✅✅ SUCCESS ✅✅✅"
+          echo "Docker image pushed successfully!"
+          echo "Image tags:"
+          echo " - ${{ vars.DOCKERHUB_USERNAME }}/learning-typescript:latest"
+          echo " - ${{ vars.DOCKERHUB_USERNAME }}/learning-typescript:${{ env.TAG }}"
+          echo ""
+
+      - name: ❌ Log failure
+        if: steps.build.outcome != 'success'
+        run: |
+          echo ""
+          echo "❌❌❌ FAILED ❌❌❌"
+          echo "Build or push failed. Please check logs above for details."
+          exit 1
