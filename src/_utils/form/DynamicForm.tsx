@@ -4,43 +4,44 @@
  * @Date 11/14/2025
  * @Time 1:04 AM
  */
-import {useState} from 'react';
+import { useState } from 'react';
 
-type DynamicFormProps<T> = {
+type DynamicFormProps<T extends Record<string, unknown>> = {
     model: T;
     onSubmit: (values: T) => void;
 };
 
-// @typescript-eslint/no-explicit-any
-export function DynamicForm<T extends Record<string, never>>({model, onSubmit}: DynamicFormProps<T>) {
+export function DynamicForm<T extends Record<string, unknown>>({ model, onSubmit }: DynamicFormProps<T>) {
     const [values, setValues] = useState<T>(model);
 
-// @typescript-eslint/no-explicit-any
-    const handleChange = (key: keyof T, value: never) => {
-        // convert value nếu kiểu là number
+    // Type-safe handleChange
+    const handleChange = <K extends keyof T>(key: K, value: string | number | boolean) => {
         const originalValue = model[key];
-        // @typescript-eslint/no-explicit-any
-        let parsedValue: string | number = value;
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
+        let parsedValue: T[K] | string = value;
+
         if (typeof originalValue === 'number') {
-            parsedValue = value === '' ? '' : Number(value);
+            parsedValue = Number(value) as T[K];
+        } else if (typeof originalValue === 'boolean') {
+            parsedValue = Boolean(value) as T[K];
         }
-        setValues({...values, [key]: parsedValue});
+
+        setValues({ ...values, [key]: parsedValue });
     };
 
-    const getInputType = (key: keyof T) => {
+    const getInputType = (key: keyof T): 'text' | 'number' | 'checkbox' => {
         const value = model[key];
         switch (typeof value) {
             case 'number':
                 return 'number';
-            case 'string':
-                return 'text';
             case 'boolean':
                 return 'checkbox';
+            case 'string':
             default:
                 return 'text';
         }
     };
-
 
     return (
         <form
@@ -50,8 +51,9 @@ export function DynamicForm<T extends Record<string, never>>({model, onSubmit}: 
             }}
         >
             {Object.keys(values).map((key) => {
-                const inputType = getInputType(key as keyof T);
-                const value = values[key as keyof T];
+                const typedKey = key as keyof T;
+                const inputType = getInputType(typedKey);
+                const value = values[typedKey];
 
                 return (
                     <div key={key}>
@@ -60,14 +62,17 @@ export function DynamicForm<T extends Record<string, never>>({model, onSubmit}: 
                             {inputType === 'checkbox' ? (
                                 <input
                                     type="checkbox"
-                                    checked={!!value}
-                                    onChange={(e) => handleChange(key as keyof T, e.target.checked)}
+                                    checked={Boolean(value)}
+                                    onChange={(e) => handleChange(typedKey, e.target.checked)}
                                 />
                             ) : (
                                 <input
                                     type={inputType}
-                                    value={inputType === 'number' && value === '' ? '' : value}
-                                    onChange={(e) => handleChange(key as keyof T, e.target.value)}
+                                    value={inputType === 'number' && value === '' ? '' : (value as string | number)}
+                                    onChange={(e) => {
+                                        const val = inputType === 'number' ? (e.target.value === '' ? '' : Number(e.target.value)) : e.target.value;
+                                        handleChange(typedKey, val);
+                                    }}
                                 />
                             )}
                         </label>

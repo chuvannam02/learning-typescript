@@ -5,6 +5,8 @@ import type {Product} from "./_utils/common/model/types.ts";
 function App() {
     // @typescript-eslint/no-unused-vars
     const handleSubmit = async (values: Product) => {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-expect-error
         const res = await fetchApi<Product>('/api/products', {
             method: 'POST',
             body: JSON.stringify(values),
