@@ -1,13 +1,25 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ],
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/type-utils": ["src/type-utils.ts"]
+    "files": [],
+    "references": [
+        {
+            "path": "./tsconfig.app.json"
+        },
+        {
+            "path": "./tsconfig.node.json"
+        }
+    ],
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@/type-utils": [
+                "src/type-utils.ts"
+            ],
+            "@/utilities": [
+                "src/_utils/"
+            ],
+            "@/utilities-api": [
+                "src/_utils/common/model/"
+            ]
+        }
     }
-  }
 }

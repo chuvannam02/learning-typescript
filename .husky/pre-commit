@@ -3,8 +3,15 @@
 
 # 1. Switch Node version theo .nvmrc nếu có
 if [ -f ".nvmrc" ]; then
-  echo "Switching Node version to $(cat .nvmrc)"
-  nvm use
+  target_version=$(cat .nvmrc)
+  current_version=$(node -v | sed 's/^v//')
+
+  if [ "$current_version" != "$target_version" ]; then
+    echo "Switching Node version from $current_version to $target_version"
+    nvm use
+  else
+    echo "Node version $current_version is already active"
+  fi
 fi
 
 # 2. Lấy danh sách file staged JS/TS/TSX
