@@ -12,6 +12,8 @@ function App() {
         console.log('Saved:', res.data);
     };
 
+    console.log("aaaaaaaaaaaaaa");
+
     return (
         <DynamicForm<Product>
             model={{id: 1, name: '', price: 0, stock: 0}}
