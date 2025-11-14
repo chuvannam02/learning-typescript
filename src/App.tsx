@@ -13,6 +13,7 @@ function App() {
     };
 
     console.log("aaaaaaaaaaaaaa");
+    console.log("aaaaaaaaaaaaaa");
 
     return (
         <DynamicForm<Product>
