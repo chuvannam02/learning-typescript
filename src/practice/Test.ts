@@ -52,3 +52,34 @@ class User {
 // @ts-ignore
 type M = ConstructorParameters<typeof User>;
 // Expected Result: type M = [name: string];
+
+// Thực sự quá dài dòng
+// Liệu có cách nào ngắn gọn hơn không?
+class Product {
+    constructor(
+        public id: number,
+        public name: string,
+        public price: number,
+        public stock: number
+    ) {}
+}
+type ProductOptional = Partial<InstanceType<typeof Product>>;
+
+class BaseModel<T> {
+    constructor(data?: Partial<T>) {
+        Object.assign(this, data);
+    }
+}
+
+class Product1 extends BaseModel<Product> {
+    id!: number;
+    name!: string;
+    price!: number;
+    stock!: number;
+}
+
+class User1 extends BaseModel<User> {
+    id!: number;
+    username!: string;
+    email!: string;
+}
