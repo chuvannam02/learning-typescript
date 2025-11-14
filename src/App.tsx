@@ -3,17 +3,14 @@ import {fetchApi} from "./_utils/common/model/api.ts";
 import type {Product} from "./_utils/common/model/types.ts";
 
 function App() {
+    // @typescript-eslint/no-unused-vars
     const handleSubmit = async (values: Product) => {
         const res = await fetchApi<Product>('/api/products', {
             method: 'POST',
             body: JSON.stringify(values),
             headers: {'Content-Type': 'application/json'},
         });
-        console.log('Saved:', res.data);
     };
-
-    console.log("aaaaaaaaaaaaaa");
-    console.log("aaaaaaaaaaaaaa");
 
     return (
         <DynamicForm<Product>
