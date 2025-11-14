@@ -293,4 +293,163 @@ jobs:
           exit 1
 
 ```
-abc
+
+## Hướng dẫn sử dụng Plop.js generator + Template cho React + Typescript + SCSS + Service + Model + Routing + Flat structure
+- Chỉ cần sử dụng npx plop module-flat là được
+
+### 1️⃣ Cài đặt plop
+```shell
+npm i -D plop
+```
+- Tạo file plopfile.cjs ở root:
+```javascript
+const fs = require('fs');
+const path = require('path');
+
+module.exports = (plop) => {
+    plop.setGenerator('module-flat', {
+        description: 'Create a React module (flat structure)',
+        prompts: [
+            {
+                type: 'input',
+                name: 'name',
+                message: 'Module name?',
+                validate: (value) => {
+                    if (!value) return 'Module name is required';
+                    return true;
+                },
+            },
+        ],
+        actions: (data) => {
+            const moduleDir = path.join('src/app', plop.getHelper('pascalCase')(data.name));
+            const actions = [];
+
+            // Nếu thư mục tồn tại, hỏi ghi đè
+            if (fs.existsSync(moduleDir)) {
+                actions.push({
+                    type: 'confirm',
+                    name: 'overwrite',
+                    message: `Folder ${moduleDir} already exists. Overwrite?`,
+                    default: false,
+                });
+                actions.push((answers) => {
+                    if (!answers.overwrite) {
+                        console.log('❌ Cancelled module creation.');
+                        process.exit(0);
+                    }
+                    return '✅ Overwriting existing module...';
+                });
+            }
+
+            // Tạo thư mục (Plop tự động tạo file => thư mục cũng tạo)
+            const files = [
+                { file: '{{pascalCase name}}.tsx', template: 'plop-templates/Module.tsx.hbs' },
+                { file: '{{pascalCase name}}.types.ts', template: 'plop-templates/Module.types.ts.hbs' },
+                { file: '{{pascalCase name}}.scss', template: 'plop-templates/Module.scss.hbs' },
+                { file: '{{pascalCase name}}.service.ts', template: 'plop-templates/Module.service.ts.hbs' },
+                { file: '{{pascalCase name}}Routing.tsx', template: 'plop-templates/ModuleRouting.tsx.hbs' },
+                { file: 'index.ts', template: 'plop-templates/index.ts.hbs' },
+            ];
+
+            files.forEach((f) => {
+                actions.push({
+                    type: 'add',
+                    path: path.join(moduleDir, f.file),
+                    templateFile: f.template,
+                    abortOnFail: true,
+                });
+            });
+
+            return actions;
+        },
+    });
+};
+```
+### 2️⃣ Tạo templates
+- plop-templates/Module.tsx.hbs
+```hbs
+import React from 'react';
+import './{{pascalCase name}}.scss';
+import { {{pascalCase name}}Props } from './{{pascalCase name}}.types';
+
+export const {{pascalCase name}}: React.FC<{{pascalCase name}}Props> = (props) => {
+  return (
+    <div className="{{camelCase name}}">
+      <h2>{{pascalCase name}} Component</h2>
+    </div>
+  );
+};
+```
+
+- plop-templates/Module.types.ts.hbs
+```hbs
+export interface {{pascalCase name}}Props {
+  // define props here
+}
+```
+
+- plop-templates/Module.scss.hbs
+```hbs
+.{{camelCase name}} {
+  /* styles */
+}
+```
+
+- plop-templates/Module.service.ts.hbs
+```hbs
+import { ApiClient } from '../../api/apiClient';
+import type { {{pascalCase name}}Model } from './{{pascalCase name}}.types';
+
+export class {{pascalCase name}}Service {
+  constructor(private api: ApiClient) {}
+
+  // example GET
+  getAll() {
+    return this.api.get<{{pascalCase name}}Model[]>('/{{kebabCase name}}');
+  }
+
+  // example POST
+  create(data: {{pascalCase name}}Model) {
+    return this.api.post<{{pascalCase name}}Model>('/{{kebabCase name}}', data);
+  }
+}
+```
+
+- plop-templates/ModuleRouting.tsx.hbs
+```hbs
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
+import { {{pascalCase name}} } from './{{pascalCase name}}';
+
+export const {{pascalCase name}}Routing = () => {
+  return (
+    <Routes>
+      <Route path="/{{kebabCase name}}" element={<{{pascalCase name}} />} />
+    </Routes>
+  );
+};
+```
+
+- plop-templates/index.ts.hbs
+```hbs
+export * from './{{pascalCase name}}';
+export * from './{{pascalCase name}}.service';
+export * from './{{pascalCase name}}Routing';
+export * from './{{pascalCase name}}.types';
+```
+
+### 3️⃣ Sử dụng
+```shell
+npx plop module-flat
+# Nhập tên module: User
+```
+
+- Kết quả: Tạo thư mục src/app/User/ với đầy đủ:
+```pgsql
+User.tsx
+User.types.ts
+User.scss
+User.service.ts
+UserRouting.tsx
+index.ts
+```
