@@ -6,3 +6,9 @@ eslint.config.js
 Dockerfile
 /dist
 .editorconfig
+.nvmrc
+/.husky
+/.github
+
+plopfile.cjs
+/plop-templates
