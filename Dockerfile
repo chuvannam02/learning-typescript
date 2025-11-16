@@ -55,7 +55,7 @@ COPY nginx.conf /etc/nginx/conf.d/default.conf
 # Tạo và cấp quyền thư mục cần thiết
 RUN mkdir -p /run/nginx && \
     chown -R appuser:appgroup /usr/share/nginx /var/cache/nginx /var/run /run /etc/nginx
-
+RUN echo 'Test'
 # Chạy bằng user non-root
 USER appuser
 
