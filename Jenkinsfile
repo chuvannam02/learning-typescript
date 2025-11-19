@@ -5,6 +5,7 @@ pipeline {
         IMAGE_NAME = "my-react-app"
         CONTAINER_NAME = "react-app-container"
         APP_PORT = "8000"
+        NGINX_PORT = "80"
     }
 
     stages {
@@ -31,7 +32,7 @@ pipeline {
                     // Run test container
                     sh """
                         echo "🚀 Running test container..."
-                        docker run -d --name ${CONTAINER_NAME}-test -p ${APP_PORT}:${APP_PORT} ${IMAGE_NAME}:latest
+                        docker run -d --name ${CONTAINER_NAME}-test -p ${APP_PORT}:${NGINX_PORT} ${IMAGE_NAME}:latest
                     """
 
                     // Wait until port is ready
