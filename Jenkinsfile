@@ -23,18 +23,23 @@ pipeline {
         stage('Run Test Container') {
             steps {
                 script {
-                    // Stop & remove old test container if exists
                     sh """
-                        echo "🧹 Cleaning old test container..."
+                        echo "🧹 Cleaning old containers..."
+        
+                        # Remove test container
                         docker rm -f ${CONTAINER_NAME}-test || true
-                    """
-
-                    // Run test container
-                    sh """
+        
+                        # Remove prod container if it uses the same port
+                        CONTAINER_ID=\$(docker ps -q --filter "publish=${APP_PORT}")
+                        if [ ! -z "\$CONTAINER_ID" ]; then
+                            echo "🛑 Removing container \$CONTAINER_ID using port ${APP_PORT}..."
+                            docker rm -f \$CONTAINER_ID
+                        fi
+        
                         echo "🚀 Running test container..."
                         docker run -d --name ${CONTAINER_NAME}-test -p ${APP_PORT}:${NGINX_PORT} ${IMAGE_NAME}:latest
                     """
-
+        
                     // Wait until port is ready
                     sh """
                         echo "⏳ Checking if service is up on port ${APP_PORT}..."
@@ -53,6 +58,7 @@ pipeline {
                 }
             }
         }
+
 
         stage('Deploy') {
             steps {
