@@ -55,7 +55,6 @@
 
     // properties đặc biệt nên không dùng được . notation
     // Phải dùng []
-    console.log(routes["/"]);
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     // @ts-expect-error
@@ -73,7 +72,6 @@
     // Tường minh hơn, tự động intellisen, suggest các key của các properties trong object routes2
     // Tự động báo lỗi nếu key không tồn tại trong object
     // @ts-ignore
-    console.log(routes2["evondev"]);
 
     // Nếu sử dụng
     //   const routes: Record<string, any> = {

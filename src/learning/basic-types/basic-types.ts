@@ -3,7 +3,6 @@ let language: string = 'javascript';
 // language = 100;
 // Khi khai báo kiểu dữ liệu cho biến thì trong lúc code compliler sẽ tự động intellisen (gợi ý các phương thức tương ứng của kiểu dữ liệu đó)
 // Ví dụ như đối với kiểu dữ liệu string
-console.log(language.split(" "));
 
 let positiveNumber: number = 1;
 // positiveNumber.split("");
@@ -41,9 +40,7 @@ function sum(a, b) {
     return a + b;
 }
 // Bình thường là sẽ truyền vào giá trị là số nguyên chẳng hạn
-console.log(sum(1, 2));
 // Tuy nhiên nếu người dùng lại truyền dạng string như này thì sao?
-console.log(sum("10", "20"));
 // = > Lúc này cần khai báo type cho các tham số truyền vào trong function
 
 function sumUseType(a: number, b: number) {
@@ -52,7 +49,6 @@ function sumUseType(a: number, b: number) {
 // Lúc này khi sử dụng sai tham số truyền vào sẽ báo lỗi ngay tránh build code hoặc chạy code mới hiển thị lỗi, compile xong là báo lỗi ngay để kịp thời khắc phục.
 // Error:
 // Argument of type 'string' is not assignable to parameter of type 'number'.ts(2345)
-// console.log(sumUseType("10", "10"));
 
 // -- Nếu khai báo kiểu dữ liệu của tham số truyền vào là unknown thì sao?
 // function sumUseUnknownVariable(a: unknown, b: unknown) {
@@ -71,11 +67,8 @@ function sumUseUnknownVariableV2(a: unknown, b: unknown): number {
 
     return 0;
 }
-console.log(sumUseUnknownVariableV2("2", "3")); // 0
-console.log(5, 10);// 15
 
 function calculate(): never {
     while(true) {
-        console.log("infinite");
     }
 }

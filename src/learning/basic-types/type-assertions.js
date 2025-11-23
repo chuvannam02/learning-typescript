@@ -29,7 +29,6 @@
     };
     // properties đặc biệt nên không dùng được . notation
     // Phải dùng []
-    console.log(routes["/"]);
     var routes1 = {
         name: 1
     };

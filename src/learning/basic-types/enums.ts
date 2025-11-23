@@ -33,6 +33,5 @@
     NEW = "NEW"
   }
   const latest = Tab.LATEST;
-  console.log(Tab.POPULAR);
   
 }
