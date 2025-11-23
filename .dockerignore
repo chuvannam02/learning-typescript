@@ -3,7 +3,6 @@
 /.gitignore
 README.md
 eslint.config.js
-Dockerfile
 /dist
 .editorconfig
 .nvmrc
@@ -12,3 +11,27 @@ Dockerfile
 
 plopfile.cjs
 /plop-templates
+
+Dockerfile
+Dockerfile-final
+Dockerfile-optimize
+Dockerfile-sample
+
+docker-compose.yml
+# docker-compose.prod.yml
+# docker-compose.dev.yml
+# docker-compose.test.yml
+
+# /tests/e2e
+# /tests/integration
+# /tests/mocks
+# /tests/fixtures
+# /tests/setup
+# /tests/utils
+# /tests/jest.setup.js
+# /tests/jest.teardown.js
+# /tests/globalTeardown.js
+# /tests/globalSetup.js
+
+
+
