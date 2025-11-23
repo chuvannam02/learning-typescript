@@ -453,3 +453,132 @@ User.service.ts
 UserRouting.tsx
 index.ts
 ```
+
+## Công dụng của việc sử dụng husky pre-commit
+### Kiểm tra và loại bỏ console.log trong các file staged
+```
+S D:\Learning\ReactJS\learning-typescript> git commit -m 'refactor: re-arrange folder directory'
+husky - DEPRECATED
+
+Please remove the following two lines from .husky/pre-commit:
+
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+They WILL FAIL in v10.0.0
+
+Checking Node version against .nvmrc: v22.12.0
+A version argument is required but missing.
+✅ Node version successfully set or confirmed by nvm.
+=== Pre-commit: Removing console.log statements ===
+[SKIPPED] No console.log in src/learning/advanced-types/generic.ts
+[SKIPPED] No console.log in src/learning/basic-types/basic-types.ts
+[SKIPPED] No console.log in src/learning/basic-types/object.ts
+[SKIPPED] No console.log in src/learning/basic-types/type-assertions.ts
+[SKIPPED] No console.log in src/learning/basic-types/type-guards.ts
+✅ Pre-commit checks passed!
+[main ae3ea69] refactor: re-arrange folder directory
+ 6 files changed, 68 insertions(+), 20 deletions(-)
+```
+### Check eslint
+```
+PS D:\Learning\ReactJS\learning-typescript> git commit -m 'refactor: re-arrange folder directory, feat: learning generic typescript'
+husky - DEPRECATED
+
+Please remove the following two lines from .husky/pre-commit:
+
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+They WILL FAIL in v10.0.0
+
+Switching Node version from 22.12.0 to v22.12.0
+A version argument is required but missing.
+=== Pre-commit: Removing console.log statements ===
+[SKIPPED] No console.log in src/learning/advanced-types/generic.ts
+[SKIPPED] No console.log in src/learning/basic-types/array.ts
+[SKIPPED] No console.log in src/learning/basic-types/basic-types.ts
+[SKIPPED] No console.log in src/learning/basic-types/object.ts
+[SKIPPED] No console.log in src/learning/basic-types/tuples.ts
+[SKIPPED] No console.log in src/learning/basic-types/type-assertions.js
+[SKIPPED] No console.log in src/learning/basic-types/type-assertions.ts
+[SKIPPED] No console.log in src/learning/basic-types/type-guards.ts
+[SKIPPED] No console.log in src/learning/basic-types/union.ts
+=== Running ESLint on staged files (ignoring unused vars) ===
+
+D:\Learning\ReactJS\learning-typescript\src\learning\basic-types\basic-types.ts
+  20:16  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\Learning\ReactJS\learning-typescript\src\learning\basic-types\object.ts
+  36:33  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+
+D:\Learning\ReactJS\learning-typescript\src\learning\basic-types\type-assertions.ts
+  16:5   error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free                                            @typescript-eslint/ban-ts-comment
+  18:5   error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free                                            @typescript-eslint/ban-ts-comment
+  34:5   error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free                                            @typescript-eslint/ban-ts-comment
+  40:5   error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free                                            @typescript-eslint/ban-ts-comment
+  51:34  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
+  61:5   error  Include a description after the "@ts-expect-error" directive to explain why the @ts-expect-error is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
+  72:32  error  Unexpected any. Specify a different type                                                                                                                       @typescript-eslint/no-explicit-any
+  75:5   error  Use "@ts-expect-error" instead of "@ts-ignore", as "@ts-ignore" will do nothing if the following line is error-free                                            @typescript-eslint/ban-ts-comment
+
+D:\Learning\ReactJS\learning-typescript\src\learning\basic-types\type-guards.ts
+   3:29  error  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
+  31:23  error  Empty block statement                     no-empty
+
+✖ 12 problems (12 errors, 0 warnings)
+
+husky - pre-commit script failed (code 1)
+PS D:\Learning\ReactJS\learning-typescript> git commit -m 'refactor: re-arrange folder directory, feat: learning generic typescript'
+husky - DEPRECATED
+
+Please remove the following two lines from .husky/pre-commit:
+
+. "$(dirname -- "$0")/_/husky.sh"
+
+They WILL FAIL in v10.0.0
+
+Switching Node version from 22.12.0 to v22.12.0
+A version argument is required but missing.
+[SKIPPED] No console.log in src/learning/advanced-types/generic.ts
+[SKIPPED] No console.log in src/learning/basic-types/array.ts
+[SKIPPED] No console.log in src/learning/basic-types/basic-types.ts
+[SKIPPED] No console.log in src/learning/basic-types/enums.ts
+[SKIPPED] No console.log in src/learning/basic-types/object.ts
+[SKIPPED] No console.log in src/learning/basic-types/tuples.ts
+[SKIPPED] No console.log in src/learning/basic-types/type-assertions.js
+[SKIPPED] No console.log in src/learning/basic-types/type-assertions.ts
+[SKIPPED] No console.log in src/learning/basic-types/type-guards.ts
+[SKIPPED] No console.log in src/learning/basic-types/union.ts
+✅ Pre-commit checks passed!
+[main dadc23d] refactor: re-arrange folder directory, feat: learning generic typescript
+ 11 files changed, 163 insertions(+), 16 deletions(-)
+ create mode 100644 src/docs/advanced-types.md
+ create mode 100644 src/learning/advanced-types/generic.ts
+ rename src/learning/{ => basic-types}/array.ts (100%)
+ rename src/learning/{ => basic-types}/basic-types.ts (92%)
+ rename src/learning/{ => basic-types}/enums.ts (96%)
+ rename src/learning/{ => basic-types}/object.ts (100%)
+ rename src/learning/{ => basic-types}/tuples.ts (100%)
+ rename src/learning/{ => basic-types}/type-assertions.js (98%)
+ rename src/learning/{ => basic-types}/type-guards.ts (82%)
+ rename src/learning/{ => basic-types}/union.ts (100%)
+```
+### Các lệnh sử dụng husky cơ bản
+- Cài đặt husky:
+```
+npm install --save-dev husky
+```
+
+- Thiết lập cài đặt cấu hình husky
+```
+husky init (recommended)
+The init command simplifies setting up husky in a project. It creates a pre-commit script in .husky/ and updates the prepare script in package.json. Modifications can be made later to suit your workflow.
+npx husky init
+```
+
+- Thử nghiệm khi commit code
+```
+git commit -m "Keep calm and commit"
+# test script will run every time you commit
+```
