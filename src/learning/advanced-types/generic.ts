@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable prefer-const */
-/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 // Ví dụ viết một hàm Identity là một hàm đơn giản nhận một giá trị đầu vào và trả về chính giá trị đó chẳng hạn
 // Nếu không dùng generic
 // Chỉ hoạt động với kiểu number

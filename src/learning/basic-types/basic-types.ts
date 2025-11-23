@@ -1,10 +1,14 @@
-let language: string = 'javascript';
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-empty */
+/* eslint-disable prefer-const */
+ 
+const language: string = 'javascript';
 // Không thể thay đổi giá trị của biến language sang kiểu dữ liệu khác kiểu string
 // language = 100;
 // Khi khai báo kiểu dữ liệu cho biến thì trong lúc code compliler sẽ tự động intellisen (gợi ý các phương thức tương ứng của kiểu dữ liệu đó)
 // Ví dụ như đối với kiểu dữ liệu string
 
-let positiveNumber: number = 1;
+const positiveNumber: number = 1;
 // positiveNumber.split("");
 
 const isAvailable: boolean = false;
@@ -22,8 +26,8 @@ keyboard1 = false;
 
 
 let testUndefined: undefined = undefined;
-testUndefined = 21;
-let test: null = null;
+// testUndefined = 21;
+const test: null = null;
 
 let study: unknown;
 // study = "reactjs";

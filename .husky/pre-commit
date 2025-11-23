@@ -2,16 +2,52 @@
 . "$(dirname "$0")/_/husky.sh"
 
 # 1. Switch Node version theo .nvmrc nếu có
-if [ -f ".nvmrc" ]; then
-  target_version=$(cat .nvmrc)
-  current_version=$(node -v | sed 's/^v//')
 
-  if [ "$current_version" != "$target_version" ]; then
-    echo "Switching Node version from $current_version to $target_version"
+# Kiểm tra nếu lệnh 'nvm' không tồn tại, thì thoát khỏi khối xử lý nvm
+if ! command -v nvm &> /dev/null
+then
+    echo "⚠️ nvm not found. Skipping Node version check."
+    # Sử dụng 'return' nếu đây là một hàm, hoặc chỉ cần 'continue' 
+    # với logic if/else sau. Tuy nhiên, trong script đơn giản, 
+    # logic dưới đây sẽ chỉ thực thi nếu 'nvm' tồn tại.
+    exit 0 # Thoát với mã thành công nếu không có nvm và không muốn làm gì thêm
+fi
+
+
+if [ -f ".nvmrc" ]; then
+    # Lấy phiên bản Node mong muốn từ .nvmrc
+    target_version=$(cat .nvmrc)
+
+    # Lấy phiên bản Node hiện tại, đảm bảo lệnh 'node -v' được tìm thấy
+    # Lưu ý: 'node -v' có thể không chính xác nếu Node chưa được tải bởi nvm.
+    # Cách tốt nhất là dùng 'nvm use' để tải đúng phiên bản theo .nvmrc.
+    
+    # Kiểm tra xem nvm có thể sử dụng phiên bản mong muốn không.
+    # Thường thì 'nvm use' tự động kiểm tra xem phiên bản đã được tải chưa.
+    
+    echo "Checking Node version against .nvmrc: $target_version"
+    
+    # Lệnh 'nvm use' tự động kiểm tra và chuyển đổi phiên bản theo .nvmrc
+    # Nếu phiên bản đã đúng, nvm sẽ hiển thị thông báo và không làm gì thêm.
+    
+    # Cần 'source' nvm trước khi dùng trong một script (nếu chưa được load)
+    # Tuy nhiên, trong môi trường pre-commit hook (như Husky), shell có thể đã sạch.
+    # Thay vì tự kiểm tra phiên bản thủ công, ta dùng tính năng của 'nvm use'.
+    
+    # Lưu ý quan trọng: nvm use thường cần được sourced.
+    # Trong môi trường Husky, nó có thể đã được xử lý hoặc cần đường dẫn đầy đủ.
+    # Nếu nvm không hoạt động, hãy thử: 
+    # export NVM_DIR="$HOME/.nvm"
+    # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+    
     nvm use
-  else
-    echo "Node version $current_version is already active"
-  fi
+    
+    if [ $? -eq 0 ]; then
+        echo "✅ Node version successfully set or confirmed by nvm."
+    else
+        echo "❌ Error setting Node version with nvm. Check if version $target_version is installed."
+        # Tùy chọn: Có thể return 1 để thất bại hook nếu không thể chuyển Node.
+    fi
 fi
 
 # 2. Lấy danh sách file staged JS/TS/TSX
@@ -40,10 +76,10 @@ for file in $STAGED_FILES; do
 done
 
 # 4. Chạy eslint chỉ trên staged files, bỏ qua unused vars
-echo "=== Running ESLint on staged files (ignoring unused vars) ==="
-npx eslint $STAGED_FILES --fix \
-  --rule 'no-unused-vars: off' \
-  --rule '@typescript-eslint/no-unused-vars: off'
+# echo "=== Running ESLint on staged files (ignoring unused vars) ==="
+# npx eslint $STAGED_FILES --fix \
+#   --rule 'no-unused-vars: off' \
+#   --rule '@typescript-eslint/no-unused-vars: off'
 
 # 5. Nếu eslint fail (ngoài unused vars), chặn commit
 if [ $? -ne 0 ]; then

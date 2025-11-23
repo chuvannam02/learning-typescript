@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+ 
 {
     // (Type beast Value) - khi khai báo : string => ưu tiên string hơn value của nó hiện tại đang là number
     //   const numericId: string = 123;
@@ -35,7 +38,7 @@
     // . property của User không hề báo lỗi
     //   const property = newUser?.name?.firstName;
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     // @ts-ignore
     const obj = {};
     //   const age = obj?.age; // undefined
@@ -56,7 +59,7 @@
     // properties đặc biệt nên không dùng được . notation
     // Phải dùng []
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+     
     // @ts-expect-error
     const routes1: Record<string, number> = {
         name: 1,

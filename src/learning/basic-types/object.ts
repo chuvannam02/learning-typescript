@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+ 
 // `?` optional (Không bắt buộc)
 const student: {
     name?: string,
