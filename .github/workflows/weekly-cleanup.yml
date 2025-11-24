@@ -22,8 +22,8 @@ jobs:
     
     env:
       # Giữ nguyên các biến môi trường
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }} 
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }} 
+      DOCKER_USERNAME: ${{ vars.DOCKERHUB_USERNAME }} 
+      DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }} 
       REPOSITORY_NAME: ten-cua-repo-tren-docker-hub
 
     steps:
