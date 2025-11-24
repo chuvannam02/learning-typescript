@@ -19,6 +19,7 @@ on:
 jobs:
   cleanup:
     runs-on: ubuntu-latest
+    environment: DOCKERHUB_USERNAME
     
     env:
       # Giữ nguyên các biến môi trường
