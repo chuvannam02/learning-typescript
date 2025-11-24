@@ -25,7 +25,7 @@ jobs:
       # Giữ nguyên các biến môi trường
       DOCKER_USERNAME: ${{ vars.DOCKERHUB_USERNAME }} 
       DOCKER_PASSWORD: ${{ secrets.DOCKERHUB_TOKEN }} 
-      REPOSITORY_NAME: betaplaptrinh/learning-typescript
+      REPOSITORY_NAME: learning-typescript
 
     steps:
       - name: Checkout code
