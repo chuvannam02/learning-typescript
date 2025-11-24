@@ -9,6 +9,8 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
       - ".dockerignore"
+      - ".github/workflows/docker-image.yml"
+      
   pull_request:
     branches: [ "main" ]
     paths:
@@ -17,7 +19,8 @@ on:
       - "package.json"
       - "pnpm-lock.yaml"
       - ".dockerignore"
-    
+      - ".github/workflows/docker-image.yml"
+      
 concurrency:
   group: docker-build-${{ github.ref }}   # Mỗi branch 1 group
   cancel-in-progress: true                # Hủy workflow cũ nếu workflow mới chạy
