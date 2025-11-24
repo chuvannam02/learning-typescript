@@ -13,7 +13,7 @@ def get_auth_token(username, password):
     
     # Scope cho phép kéo/đẩy/xóa cho mọi repository.
     # 'registry:catalog:*' scope cần thiết cho việc xóa manifest
-    scope = "registry:catalog:*" 
+    scope = "repository:betaplaptrinh/learning-typescript:pull,push,delete" 
     
     try:
         response = requests.get(
