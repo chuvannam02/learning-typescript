@@ -50,6 +50,33 @@ let outputArray = identityGeneric<number[]>([1, 2, 3]);
 // TypeScript tự suy luận outputArray là kiểu number[]
 ```
 
+- Constraint trong Generic: đảm bảo rằng giới hạn type T truyền vào thoả mãn điều kiện ràng buộc.
+- Khi sử dụng từ khoá `extends` trong Generic Type thì nó được dùng để áp đặt ràng buộc (Constraint)
+trên kiểu dữ liệu generic mà chúng ta dùng, giới hạn các loại kiểu con mà chúng ta có thể sử dụng cho tham số Generic cụ thể.
+- Giúp kiểm soát và định rõ những ràng buộc về kiểu dữ liệu, giúp Typescript
+kiểm tra kiểu tốt hơn và nó cũng cung cấp các gợi ý, cũng như các thông báo lỗi khi có sai sót khi sử dụng.
+
+```typescript
+type GenericType<T extends ConstraintType> = ...
+
+// Ví dụ: đảm bảo rằng truy cập thuộc tính mà đảm bảo chúng tồn tại trong object => tránh undefined
+// => Xong đến lúc chạy lên môi trường dev rồi, test tới tính năng đó thì mới biết => Tốn thời gian
+// => Sử dụng Constraint trong Generic thì báo lỗi lúc compile time luôn => Có thể sửa ngay lập tức.
+// Ví dụ cụ thể: Viết một hàm nhận 2 tham số: 1 là object, 2 là key trong object sau đó log ra/ hoặc trả về giá trị tương ứng với key bên trong object
+const obj = {
+    name: "Chu Văn Nam,",
+    age: 23,
+    school: "NEU",
+    isRich: false
+};
+
+function getValueKeyOfObject<T extends Record<string, any>, K extends keyof T>(obj: T, key: K): T[K] {
+    return obj[key];
+}
+// getValueKeyOfObject(obj, "name"); => output is: "Chu Văn Nam",
+// getValueKeyOfObject(obj, "chuvannam"); => Báo lỗi ngay vì trong obj này k có property "chuvannam"
+```
+
 # Conditional Type
 
 # Mapped Type
