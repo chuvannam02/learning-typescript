@@ -1,0 +1,54 @@
+name: Weekly Docker Hub Cleanup
+
+on:
+  # Thiết lập lịch chạy tự động
+  schedule:
+    # Cú pháp cron: phút giờ ngày_trong_tháng tháng ngày_trong_tuần
+    # Cron này chạy vào lúc 9:00 sáng (UTC) Chủ Nhật hàng tuần.
+    # 0 9 * * 0
+    # 0: phút (phút 0)
+    # 9: giờ (giờ 9)
+    # *: ngày trong tháng (mọi ngày)
+    # *: tháng (mọi tháng)
+    # 0: ngày trong tuần (Chủ Nhật, 1 là Thứ Hai)
+    - cron: '0 9 * * 0'
+  
+  # Thêm workflow_dispatch để có thể chạy thủ công (tùy chọn)
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    
+    # Thiết lập biến môi trường (Environment Variables)
+    env:
+      # Thay đổi bằng tên tài khoản Docker Hub của bạn
+      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }} 
+      # Sử dụng Personal Access Token (PAT) đã lưu trong GitHub Secrets
+      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }} 
+      # Thay đổi bằng tên Image/Repo bạn muốn dọn dẹp
+      REPOSITORY_NAME: ten-cua-repo-tren-docker-hub
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      # Giả định bạn có một script Python tên là 'cleanup_script.py'
+      - name: Run Cleanup Script
+        run: |
+          # Cài đặt bất kỳ thư viện Python cần thiết nào (ví dụ: requests)
+          pip install requests
+          
+          # Chạy script của bạn
+          # Bạn có thể truyền các biến môi trường vào script
+          python cleanup_script.py \
+            --user $DOCKER_USERNAME \
+            --password $DOCKER_PASSWORD \
+            --repo $REPOSITORY_NAME \
+            --keep-latest 5
+
