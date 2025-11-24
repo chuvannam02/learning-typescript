@@ -20,13 +20,10 @@ jobs:
   cleanup:
     runs-on: ubuntu-latest
     
-    # Thiết lập biến môi trường (Environment Variables)
     env:
-      # Thay đổi bằng tên tài khoản Docker Hub của bạn
+      # Giữ nguyên các biến môi trường
       DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }} 
-      # Sử dụng Personal Access Token (PAT) đã lưu trong GitHub Secrets
       DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }} 
-      # Thay đổi bằng tên Image/Repo bạn muốn dọn dẹp
       REPOSITORY_NAME: ten-cua-repo-tren-docker-hub
 
     steps:
@@ -38,17 +35,15 @@ jobs:
         with:
           python-version: '3.x'
 
-      # Giả định bạn có một script Python tên là 'cleanup_script.py'
       - name: Run Cleanup Script
         run: |
-          # Cài đặt bất kỳ thư viện Python cần thiết nào (ví dụ: requests)
+          # 1. Cài đặt thư viện 'requests'
           pip install requests
           
-          # Chạy script của bạn
-          # Bạn có thể truyền các biến môi trường vào script
+          # 2. Chạy script và truyền các biến môi trường vào dưới dạng đối số (arguments)
           python cleanup_script.py \
             --user $DOCKER_USERNAME \
             --password $DOCKER_PASSWORD \
             --repo $REPOSITORY_NAME \
-            --keep-latest 5
+            --keep-latest 5 # Số lượng tags mới nhất bạn muốn giữ lại
 
