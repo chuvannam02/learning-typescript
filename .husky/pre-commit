@@ -1,6 +1,3 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
 # 1. Switch Node version theo .nvmrc nếu có
 
 # Kiểm tra nếu lệnh 'nvm' không tồn tại, thì thoát khỏi khối xử lý nvm
