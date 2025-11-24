@@ -43,6 +43,19 @@ type ReturnType<T extends (...args: any) => any> = T extends (
 ) => infer R
     ? R
     : never;
+// Lấy kiểu trả về của function Utility type ReturnType<T>
+// Utility Type là những type có sẵn trong TypeScript giúp thao tác với các kiểu dữ liệu một cách dễ dàng hơn
+// ReturnType<T> lấy kiểu trả về của function type T
+function sum(a: number, b: number): number {
+    return a + b;
+}
+
+function logMyName(name: string): string {
+    return `My name is ${name}`;
+}
+
+type SumReturnType = ReturnType<typeof sum>; // number
+type LogMyNameReturnType = ReturnType<typeof logMyName>; // string
 
 type FuncReturnType = (a: number, b: string) => boolean;
 type RetType = ReturnType<FuncReturnType>; // boolean

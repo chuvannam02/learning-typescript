@@ -144,6 +144,24 @@ type T7 = never
 For overloaded functions, this will be the return type of the last signature; see Inferring Within Conditional Types.
 - ReturnType là một utility type có sẵn trong TypeScript, dùng để lấy kiểu trả về của một hàm.
 ```Typescript
+// Định nghĩa
+type ReturnType<T extends (...args: any) => any> = T extends (
+    ...args: any
+) => infer R
+    ? R
+    : never;
+// Phân tích
+// - `<T extends (...args: any) => any>`: Constraint in Generic => Bắt buộc truyền type function vào Generic
+// - `T extends (...args: any) => infer R ? R : never;`: để thiểu đoạn này cần tách nhỏ đoạn code ra
+// `[(T extends (...args: any) => infer R)] ? R : never;`: thay A = [(T extends (...args: any) => infer R)] => A ? R : never; => Conditional Type: Nếu A thì trả về Type R, còn không thì trả về never;
+// Tiếp tục bóc tách `[(T extends (...args: any) => infer R)]`
+// - (...args: any) => infer R: là type của function
+// - `<T extends (...args: any) => any>` trong generic đã ràng buộc phải truyền type function rồi => Câu hỏi đặt ra là tại sao cần viết lại lần nữa
+// Bạn có để ý thấy không => đoạn sau có sử dụng từ khoá `infer`
+// => trích xuất kiểu trả về của function (Vì không biết thực tế kiểu trả về của function là gì => cần dùng infer R => Để tự suy kiểu trả về của function => Đặt tổng quát là R)
+// => T extends (...args: any): infer R: Kiểm tra xem T có phải là type function không?
+// Nếu phải thì từ infer kiểu trả về R => trả về R nếu không thì trả về never.
+
 function sum(a: number, b: number) {
   return a + b;
 }

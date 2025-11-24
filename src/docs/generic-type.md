@@ -77,10 +77,24 @@ function getValueKeyOfObject<T extends Record<string, any>, K extends keyof T>(o
 // getValueKeyOfObject(obj, "chuvannam"); => Báo lỗi ngay vì trong obj này k có property "chuvannam"
 ```
 
-# Conditional Type
+- Giải thích: T extends (...args: any) => any
++ Dòng code trên nghĩa là: type T phải thoả mãn Constraint rằng T phải là type của function (có thể không truyền tham số, hoặc truyền n tham số với kiểu dữ liệu bất kỳ), 
+kiểu trả về là kiểu dữ liệu bất kỳ
++ Nếu truyền vào kiểu dữ liệu khác function => Lập tức báo lỗi ngay.
+```typescript
+// Parameters Utility Type
+// Mục tiêu là lấy danh sách (Tuple) các tham số (cùng type các các tham số) trong function
+type Parameters<T extends (...args: any) => any> = T extends (
+    ...args: infer P
+) => any
+    ? P
+    : never;
 
-# Mapped Type
-
-# Indexed
-
-# Utility
+// ReturnType Utility Type
+// Mục tiêu là lấy type trả về của function
+type ReturnType<T extends (...args: any) => any> = T extends (
+    ...args: any
+) => infer R
+    ? R
+    : never;
+```

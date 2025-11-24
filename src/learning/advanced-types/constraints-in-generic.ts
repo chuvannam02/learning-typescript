@@ -51,4 +51,13 @@
     getValueObjectByKey(student, "name"); // Hợp lệ, trả về kiểu string
     // getValueObjectByKey(student, "grade"); // Lỗi, vì "grade" không phải là key của student
     // Argument of type '"grade"' is not assignable to parameter of type '"name" | "age" | "school"'.
+
+    type CheckIsFunction<T> = T extends (...args: any) => any ? true : false;
+    function sum(a: number, b: number): number {
+        return a + b;
+    }
+    const num: number = 1;
+    type Test1 = CheckIsFunction<typeof sum>; // true
+    type Test2 = CheckIsFunction<typeof num>; // false
+    type Test3 = CheckIsFunction<string | null>; // false
 }

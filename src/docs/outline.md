@@ -44,7 +44,7 @@ https://www.facebook.com/reel/589945063955734
 
 # Mapped Type
 
-# Index Type
+# Indexed
 
 # Generic
 
