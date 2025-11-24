@@ -229,49 +229,38 @@ jobs:
           REPO: learning-typescript
           KEEP: 5
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
         run: |
-          echo "🧹 Start cleaning GHCR ghcr.io/$OWNER/$REPO ..."
-
-          # Fetch all tags
-          TAGS=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
-            https://ghcr.io/v2/$OWNER/$REPO/tags/list | jq -r '.tags[]')
-
-          if [ -z "$TAGS" ]; then
-            echo "ℹ️ No tags found"
+          echo "🧹 Fetching package versions from GitHub API..."
+      
+          DATA=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
+            https://api.github.com/users/$OWNER/packages/container/$REPO/versions)
+      
+          # Lấy version id theo thứ tự mới nhất
+          IDS=$(echo "$DATA" | jq -r '.[].id')
+      
+          COUNT=$(echo "$IDS" | wc -l)
+      
+          if [ "$COUNT" -le "$KEEP" ]; then
+            echo "ℹ️ Nothing to delete (total: $COUNT)"
             exit 0
           fi
-
-          echo "$TAGS" | nl
-
-          # Sort tags by creation date
-          SORTED=$(for T in $TAGS; do
-            CREATED=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
-              https://api.github.com/users/$OWNER/packages/container/$REPO/versions \
-              | jq -r ".[] | select(.metadata.container.tags[]? == \"$T\") | .created_at")
-            echo "$CREATED $T"
-          done | sort -r)
-
-          TO_DELETE=$(echo "$SORTED" | awk '{print $2}' | tail -n +$((KEEP+1)))
-
-          if [ -z "$TO_DELETE" ]; then
-            echo "ℹ️ Nothing to delete"
-            exit 0
-          fi
-
-          echo "🗑️ Will delete:"
+      
+          # Lấy danh sách ID cần xóa (trừ 5 bản mới nhất)
+          TO_DELETE=$(echo "$IDS" | tail -n +$((KEEP+1)))
+      
+          echo "🗑️ Will delete versions:"
           echo "$TO_DELETE" | sed 's/^/ - /'
-
-          for TAG in $TO_DELETE; do
-            echo "Deleting tag: $TAG"
-            ID=$(curl -s -H "Authorization: Bearer $GH_TOKEN" \
-              https://api.github.com/users/$OWNER/packages/container/$REPO/versions \
-              | jq -r ".[] | select(.metadata.container.tags[]? == \"$TAG\") | .id")
-
-            curl -X DELETE -H "Authorization: Bearer $GH_TOKEN" \
+      
+          for ID in $TO_DELETE; do
+            echo "Deleting version ID: $ID ..."
+            curl -s -X DELETE \
+              -H "Authorization: Bearer $GH_TOKEN" \
               https://api.github.com/users/$OWNER/packages/container/$REPO/versions/$ID
           done
+      
+          echo "✅ Cleanup completed!"
 
-          echo "✅ GHCR cleanup done"
 
       # --------------------------------------------------------------------
       # Logging
