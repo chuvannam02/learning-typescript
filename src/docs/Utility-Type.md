@@ -196,12 +196,12 @@ type T6 = ReturnType<never>;
      
 type T6 = never
 type T7 = ReturnType<string>;
-Type 'string' does not satisfy the constraint '(...args: any) => any'.
+// Type 'string' does not satisfy the constraint '(...args: any) => any'.
      
-type T7 = any
+// type T7 = any
 type T8 = ReturnType<Function>;
-Type 'Function' does not satisfy the constraint '(...args: any) => any'.
-  Type 'Function' provides no match for the signature '(...args: any): any'.
+// Type 'Function' does not satisfy the constraint '(...args: any) => any'.
+//   Type 'Function' provides no match for the signature '(...args: any): any'.
      
 type T8 = any
 
@@ -233,4 +233,40 @@ const result = safeSum(2, 3);
 
 // TypeScript bắt lỗi nếu pass sai arguments
 // safeSum(2, "3"); // ❌ Error
+```
+
+- Required<Type>: Constructs a type consisting of all properties of T set to required. (Tạo một kiểu mới với tất cả các thuộc tính của T đều là bắt buộc)
+- The opposite of Partial
+```Typescript
+// Example
+interface Props {
+    a?: number;
+    b?: string;
+}
+
+const obj: Props = {
+    a: 5
+};
+
+const obj2: Required<Props> = {
+    a: 5
+};
+// Property 'b' is missing in type '{ a: number; }' but required in type 'Required<Props>'.
+```
+
+- Pick<Type, Keys>: Constructs a type by picking the set of properties Keys (string literal or union of string literals) from Type.
+(Tạo ra type mới bằng cách chọn 1 tập các keys trong properties (Có thể là string literals hoặc union các string literals) từ Type truyền vào)
+```Typescript
+interface Todo {
+  title: string;
+  description: string;
+  completed: boolean;
+}
+ 
+type TodoPreview = Pick<Todo, "title" | "completed">;
+ 
+const todo: TodoPreview = {
+  title: "Clean room",
+  completed: false,
+};
 ```
