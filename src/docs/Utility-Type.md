@@ -19,27 +19,63 @@ Omit<{ a: 1; b: 2; c: 3 }, "a" | "b">
 
 - Extract<Type, Union>: Constructs a type by extracting from Type all union members that are assignable to Union.
 - Tạo ra một kiểu mới bằng cách trích xuất (extract) từ Type các phần tử trong union mà có thể gán được (assignable) cho Union.
+- Nói cách khác, nó trả về một Union Type mới chỉ bao gồm những thành viên từ Type mà thỏa mãn điều kiện là nằm trong hoặc tương thích với Union.
 ```Typescript
 // ⚙️ Cách hoạt động:
-Giả
-sử
-có
 type: type Extract<T, U> = T extends U ? T : never;
 // Với mỗi phần tử trong union T, TypeScript sẽ kiểm tra xem nó có thể gán cho U không.
 // Nếu có thể, nó giữ lại phần tử đó.
 // Nếu không thể, nó loại bỏ (never).
 // → Kết quả là một union mới chỉ gồm những phần tử phù hợp.
-type T0 = Extract<"a" | "b" | "c", "a" | "f">;
+
+// 🛠️ Cách sử dụng
+// Cú pháp của nó rất đơn giản:
+type ResultType = Extract<Type, Union>;
+// Type: Union Type ban đầu mà bạn muốn lọc.
+// Union: Kiểu dùng để làm tiêu chí lọc. Chỉ những thành viên của Type mà tương thích với Union mới được giữ lại.
+
+// type T0 = Extract<"a" | "b" | "c", "a" | "f">;
+// Ví dụ 1: Lọc chuỗi và số
+type OriginalUnion = "a" | "b" | "c" | 1 | 2;
+
+// Lọc ra các thành viên là chuỗi trong OriginalUnion mà cũng thuộc "a" | "d"
+// Các thành viên trong OriginalUnion là: "a", "b", "c", 1, 2
+// Tiêu chí lọc (Union) là: "a" | "d"
+// Kết quả: Chỉ có "a" từ OriginalUnion là thỏa mãn tiêu chí lọc.
+type StringExtract = Extract<OriginalUnion, "a" | "d">;
+// type StringExtract = "a"
 
 type T0 = "a"
-type T1 = Extract<string | number | (() => void), Function>;
+// Ví dụ 2: Lọc theo kiểu dữ liệu (Kiểu hàm)
+type MixedUnion = string | number | (() => void) | boolean;
+
+// Lọc ra các thành viên của MixedUnion mà có thể gán cho Function
+// - string: Không gán được cho Function
+// - number: Không gán được cho Function
+// - (() => void): Có thể gán được cho Function
+// - boolean: Không gán được cho Function
+type FunctionOnly = Extract<MixedUnion, Function>;
+// type FunctionOnly = () => void
 
 type T1 = () => void
 
+// Ví dụ 3: Lọc theo thuộc tính (Discriminated Unions)
 type Shape =
     | { kind: "circle"; radius: number }
     | { kind: "square"; x: number }
     | { kind: "triangle"; x: number; y: number };
+
+// Lọc ra các thành viên của Shape mà có thể gán được cho { kind: "circle" }
+// - { kind: "circle"; radius: number }: Có thuộc tính 'kind' là "circle" và tương thích. => Giữ lại
+// - { kind: "square"; x: number }: Thuộc tính 'kind' là "square". => Loại bỏ
+// - { kind: "triangle"; x: number; y: number }: Thuộc tính 'kind' là "triangle". => Loại bỏ
+type CircleShape = Extract<Shape, { kind: "circle" }>;
+/*
+type CircleShape = {
+    kind: "circle";
+    radius: number;
+}
+*/
 
 type T2 = Extract<Shape, { kind: "circle" }>
 
@@ -88,6 +124,38 @@ function reducer(state: string[], action: Action): string[] {
         return [...state, addAction.payload];
     }
     return state;
+}
+```
+- Exclude<UnionType, ExcludedMembers>: Constructs a type by excluding from UnionType all union members that are assignable to ExcludedMembers.
+- Ngược lại với Extract
+- Tạo ra một kiểu mới bằng cách Loại bỏ (exclude) từ Type các phần tử trong union mà có thể gán được (assignable) cho Union.
+- Nói cách khác, nó trả về một Union Type mới chỉ bao gồm những thành viên từ Type mà không thỏa mãn điều kiện là nằm trong hoặc tương thích với Union.
+```Typescript
+type Exclude<T, U> = T extends U ? never : T;
+type T0 = Exclude<"a" | "b" | "c", "a">;
+     
+type T0 = "b" | "c"
+type T1 = Exclude<"a" | "b" | "c", "a" | "b">;
+     
+type T1 = "c"
+type T2 = Exclude<string | number | (() => void), Function>;
+     
+type T2 = string | number
+ 
+type Shape =
+  | { kind: "circle"; radius: number }
+  | { kind: "square"; x: number }
+  | { kind: "triangle"; x: number; y: number };
+ 
+type T3 = Exclude<Shape, { kind: "circle" }>
+     
+type T3 = {
+    kind: "square";
+    x: number;
+} | {
+    kind: "triangle";
+    x: number;
+    y: number;
 }
 ```
 
